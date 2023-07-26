@@ -75,8 +75,9 @@ jobs:
           PARAM: "helloka"
         run: |
           echo "running jira notifier"
+          echo "The current directory is: $(pwd)"
           echo "${{ steps.version.outputs.oldversion }}"
           echo "${{ steps.version.outputs.newversion }}"
-          chmod +x ./../jira_slack_notifier.sh
-          ./../jira_slack_notifier.sh
+          chmod +x ../jira_slack_notifier.sh
+          ../jira_slack_notifier.sh
         shell: bash
