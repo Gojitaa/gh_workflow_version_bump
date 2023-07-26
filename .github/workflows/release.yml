@@ -34,9 +34,9 @@ jobs:
         run: |
           echo "Creating version params..."
           current_version=$(jq -r .version package.json)
-          if [ "${{ inputs.release_type }}" == "daily" ]; then
+          if [ "${{ inputs.option }}" == "daily" ]; then
             new_version=$(node -e "const semver = require('semver'); console.log(semver.inc('${current_version}', 'prerelease', 'alpha'))")
-          elif [ "${{ inputs.release_type }}" == "daily_rc" ]; then
+          elif [ "${{ inputs.option }}" == "daily_rc" ]; then
             new_version=$(node -e "const semver = require('semver'); console.log(semver.inc('${current_version}', 'prerelease', 'rc'))")
           fi
           echo "::set-output name=oldversion::$current_version"
@@ -49,9 +49,9 @@ jobs:
       - name: Bump Version
         run: |
           echo "Bumping version ..."
-          if [ "${{ inputs.release_type }}" == "daily" ]; then
+          if [ "${{ inputs.option }}" == "daily" ]; then
             yarn version --new-version pre --preid alpha
-          elif [ "${{ inputs.release_type }}" == "daily_rc" ]; then
+          elif [ "${{ inputs.option }}" == "daily_rc" ]; then
             yarn version --new-version pre --preid rc
           fi
 
