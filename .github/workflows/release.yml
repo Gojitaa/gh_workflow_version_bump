@@ -77,4 +77,4 @@ jobs:
           echo "running jira notifier"
           echo "${{ steps.version.outputs.newversion }}"
           echo "${{ steps.version.outputs.newversion }}"
-          sh ../jira_slack_notifier.sh
+          bash ./../jira_slack_notifier.sh
