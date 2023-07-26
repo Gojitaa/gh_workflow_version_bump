@@ -1,6 +1,6 @@
 {
   "name": "gh_action_version_bump",
-  "version": "1.0.0-alpha.3",
+  "version": "1.0.0-alpha.4",
   "main": "index.js",
   "license": "MIT",
   "devDependencies": {
