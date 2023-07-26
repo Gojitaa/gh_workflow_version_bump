@@ -1,0 +1,74 @@
+name: Release
+on:
+  workflow_dispatch:
+    inputs:
+      option:
+        description: 'Choose the type of the release'
+        required: true
+        default: 'daily'
+        options: ['daily', 'daily_rc', 'first_rc']
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+        with:
+          ref: main
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '14'
+
+      - name: Configure Git
+        run: |
+          git config --global user.name "GitHub Action Bot"
+          git config --global user.email "<>"
+
+      - name: Get version
+        id: version
+        run: |
+          echo "Creating version params..."
+          current_version=$(jq -r .version package.json)
+          if [ "${{ inputs.release_type }}" == "daily" ]; then
+            new_version=$(node -e "const semver = require('semver'); console.log(semver.inc('${current_version}', 'prerelease', 'alpha'))")
+          elif [ "${{ inputs.release_type }}" == "daily_rc" ]; then
+            new_version=$(node -e "const semver = require('semver'); console.log(semver.inc('${current_version}', 'prerelease', 'rc'))")
+          fi
+          echo "::set-output name=oldversion::$current_version"
+          echo "::set-output name=newversion::$new_version"
+
+      - name: Create release branch
+        run: |
+          git checkout -b release/${{ steps.version.outputs.newversion }}
+
+      - name: Bump Version
+        run: |
+          echo "Bumping version ..."
+          if [ "${{ inputs.release_type }}" == "daily" ]; then
+            yarn version --new-version pre --preid alpha
+          elif [ "${{ inputs.release_type }}" == "daily_rc" ]; then
+            yarn version --new-version pre --preid rc
+          fi
+
+      - name: Update development
+        id: gitupdate
+        run: |
+          git config pull.ff only
+          git push origin v${{ steps.version.outputs.newversion }}
+          git push --set-upstream origin release/${{ steps.version.outputs.newversion }}
+          git checkout main
+          git pull
+          git merge --ff-only release/${{ steps.version.outputs.newversion }}
+          git push origin main --no-verify
+
+      - name: Run shell script
+        if: steps.gitupdate.outcome == 'success'
+        run: |
+          echo "Running jira notifier"
+          echo "${{ steps.version.outputs.newversion }}"
+          echo "${{ steps.version.outputs.newversion }}"
