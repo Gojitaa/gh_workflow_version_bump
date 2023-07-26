@@ -79,5 +79,5 @@ jobs:
           echo "${{ steps.version.outputs.oldversion }}"
           echo "${{ steps.version.outputs.newversion }}"
           chmod +x ./.github/jira_slack_notifier.sh
-          ./.github/jira_slack_notifier.sh
+          ./.github/jira_slack_notifier.sh "${{ steps.version.outputs.newversion }}"
         shell: bash

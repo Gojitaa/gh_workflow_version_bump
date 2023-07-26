@@ -3,3 +3,4 @@
 readonly PARAM=$PARAM
 
 echo $PARAM
+echo $1
