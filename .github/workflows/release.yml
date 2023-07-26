@@ -75,6 +75,8 @@ jobs:
           PARAM: "helloka"
         run: |
           echo "running jira notifier"
+          echo "${{ steps.version.outputs.oldversion }}"
           echo "${{ steps.version.outputs.newversion }}"
-          echo "${{ steps.version.outputs.newversion }}"
-          bash ./../jira_slack_notifier.sh
+          chmod +x ./../jira_slack_notifier.sh
+          ./../jira_slack_notifier.sh
+        shell: bash
