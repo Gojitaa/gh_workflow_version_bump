@@ -18,10 +18,10 @@ jobs:
           else
             pr_text="SLT Needed :test_tube:"
           fi
-          echo "{notification_text}={pr_text}" >> $GITHUB_OUTPUT
+          echo "title=$pr_text" >> $GITHUB_OUTPUT
 
       - name: Echo label result
         env:
-          TITLE: ${{ steps.checklabels.outputs.notification_text }}
+          TITLE: ${{ steps.checklabels.outputs.title }}
         run: |
           echo "$TITLE"
