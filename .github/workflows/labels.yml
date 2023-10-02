@@ -14,17 +14,12 @@ jobs:
           LABELS=$(echo "${{ join(github.event.pull_request.labels.*.name, ',') }}")
           echo "$LABELS"
           if [[ $LABELS == *'rc'* ]]; then
-            echo "::set-output name=contains-rc::true"
+            pr_text="SLT Needed :test_tube: (TO-RC)"
           else
-            echo "::set-output name=contains-rc::false"
+            pr_text="SLT Needed :test_tube:"
           fi
+          echo "{notification_text}={pr_text}" >> $GITHUB_OUTPUT
 
       - name: Echo label result
         run: |
-          contains_rc=${{ steps.checklabels.outputs.contains-rc }}
-          if [[ "$contains_rc" == "true" ]]; then
-            pr_text="This is the PR (RC) !"
-          else
-            pr_text="This is the PR !"
-          fi
-          echo "$pr_text"
+          echo ${{ steps.checklabels.outputs.notification_text }}
