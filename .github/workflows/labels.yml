@@ -1,13 +1,14 @@
 name: Labels
-on: pull_request
+on:
+  pull_request:
+    types: [labeled]
+
 jobs:
-  check-labels:
+  check-labels-and-echo:
+    if: github.event.label.name == 'bug'
     runs-on: ubuntu-latest
-    outputs:
-      contains-rc: ${{ steps.check-labels.outputs.contains-rc }}
     steps:
       - name: Check labels
-        id: check-labels
         run: |
           LABELS=$(echo "${{ join(github.event.pull_request.labels.*.name, ',') }}")
           if [[ $LABELS == *'rc'* ]]; then
@@ -16,13 +17,9 @@ jobs:
             echo "::set-output name=contains-rc::false"
           fi
 
-  echo-label-result:
-    needs: check-labels
-    runs-on: ubuntu-latest
-    steps:
       - name: Echo label result
         run: |
-          contains_rc=${{ needs.check-labels.outputs.contains-rc }}
+          contains_rc=${{ steps.check-labels.outputs.contains-rc }}
           if [[ "$contains_rc" == "true" ]]; then
             pr_text="This is the PR (RC) !"
           else
