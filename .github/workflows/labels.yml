@@ -3,13 +3,29 @@ on: pull_request
 jobs:
   check-labels:
     runs-on: ubuntu-latest
+    outputs:
+      contains-rc: ${{ steps.check-labels.outputs.contains-rc }}
     steps:
       - name: Check labels
+        id: check-labels
         run: |
           LABELS=$(echo "${{ join(github.event.pull_request.labels.*.name, ',') }}")
-          echo $LABELS
           if [[ $LABELS == *'rc'* ]]; then
-           echo "Label 'rc' is present in the labels."
+            echo "::set-output name=contains-rc::true"
           else
-          echo "Label 'rc' is not present in the labels."
+            echo "::set-output name=contains-rc::false"
           fi
+
+  echo-label-result:
+    needs: check-labels
+    runs-on: ubuntu-latest
+    steps:
+      - name: Echo label result
+        run: |
+          contains_rc=${{ needs.check-labels.outputs.contains-rc }}
+          if [[ "$contains_rc" == "true" ]]; then
+            pr_text="This is the PR (RC) !"
+          else
+            pr_text="This is the PR !"
+          fi
+          echo "$pr_text"
