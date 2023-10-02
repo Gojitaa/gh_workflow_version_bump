@@ -22,4 +22,4 @@ jobs:
 
       - name: Echo label result
         run: |
-          echo ${{ steps.checklabels.outputs.notification_text }}
+          echo "${{ steps.checklabels.outputs.notification_text }}"
