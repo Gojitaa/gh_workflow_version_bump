@@ -1,0 +1,15 @@
+name: Labels
+on: pull_request
+jobs:
+  check-labels:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check labels
+        run: |
+          LABELS=$(echo "${{ join(github.event.pull_request.labels.*.name, ',') }}")
+          echo $LABELS
+          if [[ $LABELS == *'rc'* ]]; then
+           echo "Label 'rc' is present in the labels."
+          else
+          echo "Label 'rc' is not present in the labels."
+          fi
