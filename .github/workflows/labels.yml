@@ -21,5 +21,7 @@ jobs:
           echo "{notification_text}={pr_text}" >> $GITHUB_OUTPUT
 
       - name: Echo label result
+        env:
+          TITLE: ${{ steps.checklabels.outputs.notification_text }}
         run: |
-          echo "${{ steps.checklabels.outputs.notification_text }}"
+          echo "$TITLE"
