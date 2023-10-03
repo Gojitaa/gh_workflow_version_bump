@@ -22,6 +22,6 @@ jobs:
 
       - name: Echo label result
         env:
-          TITLE: ${{ steps.checklabels.outputs.title }}
+          TITLE:
         run: |
-          echo "$TITLE"
+          echo "${{ steps.checklabels.outputs.title }}"
