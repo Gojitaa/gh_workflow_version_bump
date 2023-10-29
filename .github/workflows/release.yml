@@ -75,7 +75,7 @@ jobs:
         env:
           PARAM: "helloka"
         run: |
-          echo "Running jira notifier"
+          echo "Running jira notifier pt2"
           echo "The current directory is: $(pwd)"
           echo "${{ steps.version.outputs.oldversion }}"
           echo "${{ steps.version.outputs.newversion }}"
