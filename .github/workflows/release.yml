@@ -3,10 +3,11 @@ on:
   workflow_dispatch:
     inputs:
       option:
-        description: 'Choose the type of the release'
+        type: choice
+        description: "Choose the type of the release"
         required: true
-        default: 'daily'
-        options: ['daily', 'daily_rc', 'first_rc']
+        default: "daily"
+        options: ["daily", "daily_rc", "first_rc"]
 
 jobs:
   build:
@@ -22,7 +23,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: '14'
+          node-version: "14"
 
       - name: Configure Git
         run: |
